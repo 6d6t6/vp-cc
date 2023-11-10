@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VP-CC [v1] (by IMP)</title>
+    <title>VP-CC [v1.2] (by IMP)</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         /* Style the body to fill the viewport */
@@ -58,12 +58,13 @@
                     videoPlayer.src = videoUrl;
 
                     if (subtitleUrl) {
-                        // If subtitles are provided, add them to the video
+                        // If subtitles are provided, add them to the video and set as default
                         const track = document.createElement('track');
                         track.src = subtitleUrl;
                         track.kind = 'subtitles';
                         track.label = 'English';
                         track.srclang = 'en';
+                        track.default = true; // Set subtitles as default
                         videoPlayer.appendChild(track);
                     }
 
@@ -83,12 +84,13 @@
                 const hls = new Hls();
 
                 if (subtitleUrl) {
-                    // If subtitles are provided, add them to the video
+                    // If subtitles are provided, add them to the video and set as default
                     const track = document.createElement('track');
                     track.src = subtitleUrl;
                     track.kind = 'subtitles';
                     track.label = 'English';
                     track.srclang = 'en';
+                    track.default = true; // Set subtitles as default
                     videoPlayer.appendChild(track);
                 }
 
@@ -102,12 +104,13 @@
                 videoPlayer.src = videoUrl;
 
                 if (subtitleUrl) {
-                    // If subtitles are provided, add them to the video
+                    // If subtitles are provided, add them to the video and set as default
                     const track = document.createElement('track');
                     track.src = subtitleUrl;
                     track.kind = 'subtitles';
                     track.label = 'English';
                     track.srclang = 'en';
+                    track.default = true; // Set subtitles as default
                     videoPlayer.appendChild(track);
                 }
 
