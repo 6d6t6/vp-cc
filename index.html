@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VP-CC [v1] (by IMP)</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        /* Style the body to fill the viewport */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000;
+        }
+
+        /* Style the video container */
+        body::before {
+            content: "";
+            padding-top: 56.25%; /* 16:9 aspect ratio (9 / 16 * 100) */
+            display: block;
+        }
+
+        /* Style the video element */
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <video id="videoPlayer" controls autoplay playsinline>
+        Your browser does not support the video tag.
+    </video>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get the URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const videoUrl = urlParams.get('video');
+            const subtitleUrl = urlParams.get('sub');
+
+            if (videoUrl) {
+                // Check if the URL is an HLS stream (ends with .m3u8)
+                if (videoUrl.endsWith('.m3u8')) {
+                    // Play HLS stream
+                    playHLSStream(videoUrl, subtitleUrl);
+                } else {
+                    // Set the video source to the URL parameter value
+                    const videoPlayer = document.getElementById('videoPlayer');
+                    videoPlayer.src = videoUrl;
+
+                    if (subtitleUrl) {
+                        // If subtitles are provided, add them to the video
+                        const track = document.createElement('track');
+                        track.src = subtitleUrl;
+                        track.kind = 'subtitles';
+                        track.label = 'English';
+                        track.srclang = 'en';
+                        videoPlayer.appendChild(track);
+                    }
+
+                    videoPlayer.addEventListener('loadedmetadata', function () {
+                        // Start playing the video after metadata is loaded
+                        videoPlayer.play();
+                    });
+                }
+            }
+        });
+
+        // Function to play HLS stream
+        function playHLSStream(videoUrl, subtitleUrl) {
+            const videoPlayer = document.getElementById('videoPlayer');
+
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+
+                if (subtitleUrl) {
+                    // If subtitles are provided, add them to the video
+                    const track = document.createElement('track');
+                    track.src = subtitleUrl;
+                    track.kind = 'subtitles';
+                    track.label = 'English';
+                    track.srclang = 'en';
+                    videoPlayer.appendChild(track);
+                }
+
+                hls.loadSource(videoUrl);
+                hls.attachMedia(videoPlayer);
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    // Start playing the video after manifest is parsed
+                    videoPlayer.play();
+                });
+            } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+                videoPlayer.src = videoUrl;
+
+                if (subtitleUrl) {
+                    // If subtitles are provided, add them to the video
+                    const track = document.createElement('track');
+                    track.src = subtitleUrl;
+                    track.kind = 'subtitles';
+                    track.label = 'English';
+                    track.srclang = 'en';
+                    videoPlayer.appendChild(track);
+                }
+
+                videoPlayer.addEventListener('loadedmetadata', function () {
+                    // Start playing the video after metadata is loaded
+                    videoPlayer.play();
+                });
+            }
+        }
+    </script>
+</body>
+</html>
